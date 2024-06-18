@@ -16,14 +16,6 @@
         "port": 6006
       }
     },
-    "dev": {
-      "name": "dev",
-      "command": "pnpm dev",
-      "runAtStart": true,
-      "preview": {
-        "port": 5173
-      }
-    },
     "build": {
       "name": "build",
       "command": "pnpm build",
