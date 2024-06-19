@@ -1,6 +1,6 @@
-import { Tooltip, type TooltipProps } from "./Tooltip";
 import type { Meta, StoryObj } from "@storybook/react";
 import { styled } from "../../../styled-system/jsx";
+import { Tooltip, type TooltipProps } from "./Tooltip";
 
 const meta = {
   title: "Tooltip",
@@ -54,6 +54,19 @@ export const WithDefaultIsOpenProp: Story = {
   },
   render: (props) => (
     <Tooltip {...props}>
+      <button disabled>Can't Touch This</button>
+    </Tooltip>
+  ),
+};
+
+export const WithDarkTheme: Story = {
+  args: {
+    ...defaultProps,
+    label: "You don't have access to this",
+    isOpen: true,
+  },
+  render: (props) => (
+    <Tooltip data-panda-theme="dark" {...props}>
       <button disabled>Can't Touch This</button>
     </Tooltip>
   ),

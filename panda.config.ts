@@ -1,7 +1,11 @@
-import { defineSlotRecipe } from "@pandacss/dev";
+import {
+  defineSemanticTokens,
+  defineSlotRecipe,
+  defineTokens,
+} from "@pandacss/dev";
 import { defineConfig } from "@pandacss/dev";
 
-export const tooltipRecipe = defineSlotRecipe({
+const tooltipRecipe = defineSlotRecipe({
   className: "tooltip",
   description: "The styles for the Tooltip component",
   slots: ["wrapper", "label"],
@@ -9,19 +13,19 @@ export const tooltipRecipe = defineSlotRecipe({
     wrapper: { display: "inline-block", position: "relative" },
     label: {
       position: "absolute",
-      borderRadius: "4px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "flex-start",
+      borderRadius: "md",
       left: "50%",
       transform: "translateX(-50%)",
-      padding: "6px",
+      padding: "8px",
       color: "tooltip.text",
       background: "tooltip.background",
-      fontSize: "14px",
-      fontFamily: "sans-serif",
-      lineHeight: "1",
-      zIndex: "100",
+      zIndex: "var(--tooltip-z-index)",
       whiteSpace: "nowrap",
       _before: {
-        content: '" "',
+        content: '""',
         left: "50%",
         border: "solid transparent",
         height: 0,
@@ -32,14 +36,14 @@ export const tooltipRecipe = defineSlotRecipe({
         marginLeft: "calc(var(--tooltip-arrow-size) * -1)",
       },
       "&[data-tooltip-placement=top]": {
-        top: "calc(var(--tooltip-margin) * -1)",
+        top: "calc(var(--tooltip-offset) * -1)",
         _before: {
           top: "100%",
           borderTopColor: "tooltip.background",
         },
       },
       "&[data-tooltip-placement=right]": {
-        left: "calc(100% + var(--tooltip-margin))",
+        left: "calc(100% + var(--tooltip-offset))",
         top: "50%",
         transform: "translateX(0) translateY(-50%)",
         _before: {
@@ -51,7 +55,7 @@ export const tooltipRecipe = defineSlotRecipe({
       },
       "&[data-tooltip-placement=left]": {
         left: "auto",
-        right: "calc(100% + var(--tooltip-margin))",
+        right: "calc(100% + var(--tooltip-offset))",
         top: "50%",
         transform: "translateX(0) translateY(-50%)",
         _before: {
@@ -63,11 +67,33 @@ export const tooltipRecipe = defineSlotRecipe({
         },
       },
       "&[data-tooltip-placement=bottom]": {
-        bottom: "calc(var(--tooltip-margin) * -1)",
+        bottom: "calc(var(--tooltip-offset) * -1)",
         _before: {
           bottom: "100%",
           borderBottomColor: "tooltip.background",
         },
+      },
+    },
+  },
+});
+
+const baseTokens = defineTokens({
+  colors: {
+    tooltip: {
+      text: { value: "{colors.natural.text}" },
+      background: { value: "{colors.natural.surface}" },
+    },
+  },
+});
+
+const baseSemanticTokens = defineSemanticTokens({
+  colors: {
+    natural: {
+      surface: {
+        value: "#F3F3F8",
+      },
+      text: {
+        value: "#130F25",
       },
     },
   },
@@ -84,16 +110,45 @@ export default defineConfig({
       slotRecipes: {
         tooltip: tooltipRecipe,
       },
+      semanticTokens: baseSemanticTokens,
+      tokens: baseTokens,
+    },
+  },
+  themes: {
+    dark: {
+      semanticTokens: {
+        colors: {
+          natural: {
+            surface: {
+              value: "#130F25",
+            },
+            text: {
+              value: "#F3F3F8",
+            },
+          },
+        },
+      },
       tokens: {
         colors: {
-          "tooltip.text": { value: "white" },
-          "tooltip.background": { value: "black" },
+          tooltip: {
+            text: { value: "{colors.natural.text}" },
+            background: { value: "{colors.natural.surface}" },
+          },
         },
       },
     },
   },
+  staticCss: {
+    themes: ["dark"],
+    recipes: "*",
+  },
   globalVars: {
-    "--tooltip-margin": "30px",
-    "--tooltip-arrow-size": "6px",
+    "--tooltip-offset": "3rem",
+    "--tooltip-arrow-size": "0.375rem",
+    "--tooltip-z-index": "100",
+  },
+  conditions: {
+    light: "[data-color-mode=light] &",
+    dark: "[data-color-mode=dark] &",
   },
 });
