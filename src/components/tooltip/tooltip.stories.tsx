@@ -1,27 +1,78 @@
-import { Tooltip } from "./Tooltip";
-import type { Meta, StoryObj } from '@storybook/react';
+import { Tooltip, type TooltipProps } from "./Tooltip";
+import type { Meta, StoryObj } from "@storybook/react";
+import { styled } from "../../../styled-system/jsx";
 
-
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Example/Tooltip',
+  title: "Tooltip",
   component: Tooltip,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: 'centered',
+    layout: "centered",
   },
 } satisfies Meta<typeof Tooltip>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary: Story = {
+const defaultProps: TooltipProps = {
+  placement: "top",
+  label: "Yuuu Hooo",
+};
+
+export const Basic: Story = {
+  args: defaultProps,
+  render: (props) => (
+    <div>
+      <Tooltip {...props}>With Tooltip</Tooltip>
+    </div>
+  ),
+};
+
+export const MultipleTooltips: Story = {
+  args: defaultProps,
+  render: (props) => (
+    <styled.div display="flex" flexDir="column" gap="2">
+      <Tooltip {...props}>With Tooltip 1</Tooltip>
+      <Tooltip {...props}>With Tooltip 2</Tooltip>
+    </styled.div>
+  ),
+};
+
+export const WithDisabledButton: Story = {
+  args: { ...defaultProps, label: "You don't have access to this" },
+  render: (props) => (
+    <Tooltip {...props}>
+      <button disabled>Can't Touch This</button>
+    </Tooltip>
+  ),
+};
+
+export const WithDefaultIsOpenProp: Story = {
   args: {
-    direction: "top",
-    label: 'Yuuu Hooo',
+    ...defaultProps,
+    label: "You don't have access to this",
+    isOpen: true,
   },
-  render: (props) => <Tooltip {...props}>
-    <h1>With Tooltip</h1>
-  </Tooltip>,
+  render: (props) => (
+    <Tooltip {...props}>
+      <button disabled>Can't Touch This</button>
+    </Tooltip>
+  ),
+};
+
+export const WithAriaLabel: Story = {
+  args: {
+    ...defaultProps,
+    label: "Notifications",
+    "aria-label": "3 Notifications",
+  },
+  render: (props) => (
+    <Tooltip {...props}>
+      <button style={{ fontSize: 25 }}>
+        <span role="img" aria-label="notification">
+          🔔
+        </span>
+        <span>3</span>
+      </button>
+    </Tooltip>
+  ),
 };
